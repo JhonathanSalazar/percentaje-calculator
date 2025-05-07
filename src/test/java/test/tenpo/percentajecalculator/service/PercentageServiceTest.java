@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class PercentageServiceTest {
 
@@ -59,5 +59,37 @@ class PercentageServiceTest {
         RestClientException exception = assertThrows(RestClientException.class, () -> percentageService.retrievePercentage());
 
         assertEquals("Failed to retrieve percentage from external API and no cached value available: API connection failed", exception.getMessage());
+    }
+
+    @Test
+    void retrievePercentage_shouldUseCachedValueWhenApiFails() {
+        Integer[] mockResponse = new Integer[]{42};
+        when(restTemplate.getForObject(anyString(), eq(Integer[].class)))
+                .thenReturn(mockResponse);
+
+        Long firstResult = percentageService.retrievePercentage();
+        assertEquals(42L, firstResult);
+
+        when(restTemplate.getForObject(anyString(), eq(Integer[].class)))
+                .thenThrow(new RuntimeException("API connection failed"));
+
+        Long secondResult = percentageService.retrievePercentage();
+        assertEquals(42L, secondResult);
+    }
+
+    @Test
+    void retrievePercentage_shouldCacheResultsForMultipleCalls() {
+        Integer[] mockResponse = new Integer[]{42};
+        when(restTemplate.getForObject(anyString(), eq(Integer[].class))).thenReturn(mockResponse);
+
+        Long result1 = percentageService.retrievePercentage();
+        Long result2 = percentageService.retrievePercentage();
+        Long result3 = percentageService.retrievePercentage();
+
+        assertEquals(42L, result1);
+        assertEquals(42L, result2);
+        assertEquals(42L, result3);
+
+        verify(restTemplate, times(3)).getForObject(anyString(), eq(Integer[].class));
     }
 }
