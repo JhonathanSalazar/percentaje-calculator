@@ -23,7 +23,7 @@ class PercentageServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         percentageService = new PercentageService(restTemplate);
-        ReflectionTestUtils.setField(percentageService, "randomNumberApiUrl", "http://test-url");
+        ReflectionTestUtils.setField(percentageService, "percentageApiURL", "http://test-url");
     }
 
     @Test

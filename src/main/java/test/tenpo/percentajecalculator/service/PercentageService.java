@@ -8,8 +8,8 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class PercentageService {
 
-    @Value("${random.number.api.url}")
-    private String randomNumberApiUrl;
+    @Value("${percentage-api.url}")
+    private String percentageApiURL;
 
     private final RestTemplate restTemplate;
 
@@ -19,7 +19,7 @@ public class PercentageService {
     }
 
     public Long retrievePercentage() {
-        Integer[] response = restTemplate.getForObject(randomNumberApiUrl, Integer[].class);
+        Integer[] response = restTemplate.getForObject(percentageApiURL, Integer[].class);
         return response != null && response.length > 0 ? response[0].longValue() : 0L;
     }
 }
