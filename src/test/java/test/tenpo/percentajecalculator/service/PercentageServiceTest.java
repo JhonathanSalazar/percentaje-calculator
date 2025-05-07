@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -48,5 +50,16 @@ class PercentageServiceTest {
         when(restTemplate.getForObject(anyString(), eq(Integer[].class))).thenReturn(mockResponse);
         Long result = percentageService.retrievePercentage();
         assertEquals(0L, result);
+    }
+
+    @Test
+    void retrievePercentage_shouldThrowRestClientExceptionWhenApiFails() {
+        when(restTemplate.getForObject(anyString(), eq(Integer[].class))).thenThrow(new RuntimeException("API connection failed"));
+
+        RestClientException exception = assertThrows(RestClientException.class, () -> {
+            percentageService.retrievePercentage();
+        });
+
+        assertEquals("Failed to retrieve percentage from external API: API connection failed", exception.getMessage());
     }
 }
