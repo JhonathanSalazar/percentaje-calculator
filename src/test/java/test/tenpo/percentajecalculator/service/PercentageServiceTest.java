@@ -56,10 +56,8 @@ class PercentageServiceTest {
     void retrievePercentage_shouldThrowRestClientExceptionWhenApiFails() {
         when(restTemplate.getForObject(anyString(), eq(Integer[].class))).thenThrow(new RuntimeException("API connection failed"));
 
-        RestClientException exception = assertThrows(RestClientException.class, () -> {
-            percentageService.retrievePercentage();
-        });
+        RestClientException exception = assertThrows(RestClientException.class, () -> percentageService.retrievePercentage());
 
-        assertEquals("Failed to retrieve percentage from external API: API connection failed", exception.getMessage());
+        assertEquals("Failed to retrieve percentage from external API and no cached value available: API connection failed", exception.getMessage());
     }
 }
