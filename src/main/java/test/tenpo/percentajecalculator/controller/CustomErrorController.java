@@ -44,11 +44,9 @@ public class CustomErrorController implements ErrorController {
                 .errors(Collections.singletonList(errorDetails))
                 .build();
 
-        // Convert response to JSON for logging
         try {
             String responseJson = objectMapper.writeValueAsString(responseWrapper);
 
-            // Log the error asynchronously
             callHistoryService.logApiCall(path, "", responseJson);
         } catch (JsonProcessingException e) {
             logger.error("Error serializing response: {}", e.getMessage(), e);
