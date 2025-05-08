@@ -1,5 +1,12 @@
 package test.tenpo.percentajecalculator.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +20,7 @@ import test.tenpo.percentajecalculator.service.CallHistoryService;
 
 @RestController
 @RequestMapping("/api/v1/call-history")
+@Tag(name = "Call History", description = "API to retrieve call history with pagination")
 public class CallHistoryController {
 
     private final CallHistoryService callHistoryService;
@@ -21,10 +29,25 @@ public class CallHistoryController {
         this.callHistoryService = callHistoryService;
     }
 
+    @Operation(
+        summary = "Get call history",
+        description = "Retrieves a paginated list of API call history records"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200", 
+            description = "Successfully retrieved call history",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ResponseWrapper.class)
+            )
+        ),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping
     public ResponseEntity<ResponseWrapper> getCallHistory(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @Parameter(description = "Page number (zero-based)") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Number of items per page") @RequestParam(defaultValue = "10") int size) {
 
         Page<CallHistory> callHistoryPage = callHistoryService.getCallHistory(page, size);
 
