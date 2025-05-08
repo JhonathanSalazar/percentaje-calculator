@@ -11,8 +11,6 @@ import test.tenpo.percentajecalculator.model.PagedResponse;
 import test.tenpo.percentajecalculator.model.ResponseWrapper;
 import test.tenpo.percentajecalculator.service.CallHistoryService;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/call-history")
 public class CallHistoryController {

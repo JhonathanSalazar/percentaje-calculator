@@ -12,7 +12,6 @@ import test.tenpo.percentajecalculator.model.CallHistory;
 import test.tenpo.percentajecalculator.repository.CallHistoryRepository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class CallHistoryService {
@@ -43,10 +42,5 @@ public class CallHistoryService {
     public Page<CallHistory> getCallHistory(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("callDate").descending());
         return callHistoryRepository.findAll(pageable);
-    }
-
-    public List<CallHistory> getCallHistory() {
-        Sort sort = Sort.by("callDate").descending();
-        return callHistoryRepository.findAll(sort);
     }
 }

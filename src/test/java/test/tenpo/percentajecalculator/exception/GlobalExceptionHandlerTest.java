@@ -38,7 +38,7 @@ class GlobalExceptionHandlerTest {
         assertNotNull(responseBody.getErrors());
         assertEquals(1, responseBody.getErrors().size());
 
-        ErrorDetails errorDetails = responseBody.getErrors().get(0);
+        ErrorDetails errorDetails = responseBody.getErrors().getFirst();
         assertEquals("fieldName", errorDetails.getField());
         assertEquals("invalidValue", errorDetails.getRejectedValue());
     }
