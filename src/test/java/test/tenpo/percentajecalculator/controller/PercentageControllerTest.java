@@ -24,14 +24,12 @@ public class PercentageControllerTest {
 
     @Test
     public void testCalculateSuccess() throws Exception {
-        // Given
         Long numA = 10L;
         Long numB = 20L;
         Long expectedResult = 60L; // Example result
         
         when(calculatorService.calculatePercentage(numA, numB)).thenReturn(expectedResult);
 
-        // When & Then
         mockMvc.perform(get("/api/v1/percentage/calculate")
                 .param("numA", numA.toString())
                 .param("numB", numB.toString())
@@ -42,14 +40,12 @@ public class PercentageControllerTest {
 
     @Test
     public void testCalculateWithNegativeNumbers() throws Exception {
-        // Given
         Long numA = -10L;
         Long numB = 20L;
         Long expectedResult = 20L; // Example result
         
         when(calculatorService.calculatePercentage(numA, numB)).thenReturn(expectedResult);
 
-        // When & Then
         mockMvc.perform(get("/api/v1/percentage/calculate")
                 .param("numA", numA.toString())
                 .param("numB", numB.toString())
@@ -60,14 +56,12 @@ public class PercentageControllerTest {
 
     @Test
     public void testCalculateWithZeroValues() throws Exception {
-        // Given
         Long numA = 0L;
         Long numB = 0L;
         Long expectedResult = 0L; // Example result
         
         when(calculatorService.calculatePercentage(numA, numB)).thenReturn(expectedResult);
 
-        // When & Then
         mockMvc.perform(get("/api/v1/percentage/calculate")
                 .param("numA", numA.toString())
                 .param("numB", numB.toString())
@@ -78,14 +72,12 @@ public class PercentageControllerTest {
 
     @Test
     public void testCalculateWithLargeNumbers() throws Exception {
-        // Given
         Long numA = 1000000L;
         Long numB = 2000000L;
         Long expectedResult = 6000000L; // Example result
         
         when(calculatorService.calculatePercentage(numA, numB)).thenReturn(expectedResult);
 
-        // When & Then
         mockMvc.perform(get("/api/v1/percentage/calculate")
                 .param("numA", numA.toString())
                 .param("numB", numB.toString())
@@ -96,7 +88,6 @@ public class PercentageControllerTest {
 
     @Test
     public void testCalculateWithMissingParameters() throws Exception {
-        // When & Then
         mockMvc.perform(get("/api/v1/percentage/calculate")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
