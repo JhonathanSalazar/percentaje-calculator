@@ -1,5 +1,6 @@
 package test.tenpo.percentajecalculator.exception;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -41,5 +42,26 @@ class GlobalExceptionHandlerTest {
         ErrorDetails errorDetails = responseBody.getErrors().getFirst();
         assertEquals("fieldName", errorDetails.getField());
         assertEquals("invalidValue", errorDetails.getRejectedValue());
+    }
+
+    @Test
+    void testHandleNoHandlerFoundException() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getRequestURI()).thenReturn("/invalid-path");
+
+        ResponseEntity<Object> response = globalExceptionHandler.handleNoHandlerFoundException(request);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+        ResponseWrapper responseBody = (ResponseWrapper) response.getBody();
+        assertNotNull(responseBody);
+        assertNotNull(responseBody.getErrors());
+        assertEquals(1, responseBody.getErrors().size());
+
+        ErrorDetails errorDetails = responseBody.getErrors().getFirst();
+        assertEquals("path", errorDetails.getField());
+        assertEquals("/invalid-path", errorDetails.getRejectedValue());
+        assertEquals("Path not found", errorDetails.getMessage());
     }
 }
