@@ -28,7 +28,7 @@ class GlobalExceptionHandlerTest {
         when(exception.getPropertyName()).thenReturn("fieldName");
         when(exception.getValue()).thenReturn("invalidValue");
 
-        ResponseEntity<Object> response = globalExceptionHandler.handleGlobalException(exception);
+        ResponseEntity<Object> response = globalExceptionHandler.handleMethodArgumentTypeMismatch(exception);
 
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());

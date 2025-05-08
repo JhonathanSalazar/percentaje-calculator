@@ -2,6 +2,10 @@ package test.tenpo.percentajecalculator.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import test.tenpo.percentajecalculator.model.CallHistory;
@@ -29,14 +33,20 @@ public class CallHistoryService {
                     .parameters(parameters)
                     .response(response)
                     .build();
-            
+
             callHistoryRepository.save(callHistory);
         } catch (Exception e) {
             logger.error("Error logging API call: {}", e.getMessage(), e);
         }
     }
 
+    public Page<CallHistory> getCallHistory(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("callDate").descending());
+        return callHistoryRepository.findAll(pageable);
+    }
+
     public List<CallHistory> getCallHistory() {
-        return callHistoryRepository.findAll();
+        Sort sort = Sort.by("callDate").descending();
+        return callHistoryRepository.findAll(sort);
     }
 }
